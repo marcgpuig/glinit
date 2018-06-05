@@ -1,0 +1,89 @@
+# https://jacquesh.github.io/post/basic-cmake/
+# Project definition
+cmake_minimum_required(VERSION 3.9.0)
+project(opengl_project)
+
+set(PRE ${CMAKE_STATIC_LIBRARY_PREFIX})
+set(SUF ${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+# Source directorioes and files
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
+set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
+
+# Executable output directory
+set(EXECUTABLE_OUTPUT_PATH ${BIN_DIR})
+
+# All source files in the dir
+file(GLOB_RECURSE SOURCES 
+	${SRC_DIR}/*.cpp
+	${SRC_DIR}/*.h
+)
+
+include(ExternalProject)
+
+# -- GLFW ----------------------------------------------------------
+set(GLAD_INCLUDE ${LIB_DIR}/glad/include)
+# ------------------------------------------------------------------
+
+# -- GLFW ----------------------------------------------------------
+set(GLFW_DIR ${LIB_DIR}/glfw)
+set(GLFW_INCLUDE ${GLFW_DIR}/include)
+set(GLFW_LIB ${GLFW_DIR}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}glfw3${CMAKE_STATIC_LIBRARY_SUFFIX})
+ExternalProject_Add(glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_SHALLOW 1
+    GIT_TAG 3.2.1
+    CMAKE_ARGS
+    	-DGLFW_BUILD_EXAMPLES=OFF
+    	-DGLFW_BUILD_TESTS=OFF
+    	-DGLFW_BUILD_DOCS=OFF
+    	-DGLFW_VULKAN_STATIC=OFF
+    	-DBUILD_SHARED_LIBS=OFF
+    	-DCMAKE_INSTALL_PREFIX=${GLFW_DIR}
+    PREFIX glfw
+    UPDATE_COMMAND ""
+)
+# ------------------------------------------------------------------
+
+# -- GLM -----------------------------------------------------------
+set(GLM_DIR ${LIB_DIR}/glm)
+set(GLM_INCLUDE ${GLM_DIR}/src/glm)
+ExternalProject_Add(glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_SHALLOW 1
+    GIT_TAG 0.9.9.0
+    CMAKE_ARGS -DGLM_INSTALL_ENABLE=OFF
+    PREFIX ${LIB_DIR}/glm
+    INSTALL_COMMAND ""
+    UPDATE_COMMAND ""
+)
+# install(DIRECTORY  DESTINATION ${LIB_DIR})
+# ------------------------------------------------------------------
+
+# Mian executable
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+add_dependencies(${PROJECT_NAME} glfw glm)
+
+#include_directories("${LIB_DIR}/glad/include")
+#include_directories("${glfw_include_folder}")
+#include_directories("${LIB_DIR}/glm")
+#include_directories("${LIB_DIR}/imgui")
+
+include_directories(${PROJECT_NAME} 
+    ${GLAD_INCLUDE}
+    ${GLFW_INCLUDE}
+    ${GLM_INCLUDE}
+)
+
+# include_directories(${PROJECT_NAME}
+
+# Find OpenGL
+include(FindOpenGL)
+# Add the (.a/.lib) libraries
+
+target_link_libraries(${PROJECT_NAME} 
+    ${OPENGL_gl_LIBRARY}
+    ${GLFW_LIB}
+)
