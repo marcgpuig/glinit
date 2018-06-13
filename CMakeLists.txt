@@ -1,10 +1,10 @@
 # https://jacquesh.github.io/post/basic-cmake/
 # Project definition
-cmake_minimum_required(VERSION 3.9.0)
+cmake_minimum_required(VERSION 3.8.0)
 project(opengl_project)
 
-set(PRE ${CMAKE_STATIC_LIBRARY_PREFIX})
-set(SUF ${CMAKE_STATIC_LIBRARY_SUFFIX})
+#set(PRE ${CMAKE_STATIC_LIBRARY_PREFIX})
+#set(SUF ${CMAKE_STATIC_LIBRARY_SUFFIX})
 
 # Source directorioes and files
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
@@ -18,11 +18,12 @@ set(EXECUTABLE_OUTPUT_PATH ${BIN_DIR})
 file(GLOB_RECURSE SOURCES 
 	${SRC_DIR}/*.cpp
 	${SRC_DIR}/*.h
+    ${LIB_DIR}/glad/glad.c # glad.c must be added to source files
 )
 
 include(ExternalProject)
 
-# -- GLFW ----------------------------------------------------------
+# -- GLAD ----------------------------------------------------------
 set(GLAD_INCLUDE ${LIB_DIR}/glad/include)
 # ------------------------------------------------------------------
 
@@ -58,32 +59,23 @@ ExternalProject_Add(glm
     INSTALL_COMMAND ""
     UPDATE_COMMAND ""
 )
-# install(DIRECTORY  DESTINATION ${LIB_DIR})
 # ------------------------------------------------------------------
 
 # Mian executable
 add_executable(${PROJECT_NAME} ${SOURCES})
-
 add_dependencies(${PROJECT_NAME} glfw glm)
 
-#include_directories("${LIB_DIR}/glad/include")
-#include_directories("${glfw_include_folder}")
-#include_directories("${LIB_DIR}/glm")
-#include_directories("${LIB_DIR}/imgui")
+# Find OpenGL
+include(FindOpenGL)
+
+# Add the (.a/.lib) libraries
+target_link_libraries(${PROJECT_NAME} 
+    ${OPENGL_gl_LIBRARY}
+    ${GLFW_LIB}
+)
 
 include_directories(${PROJECT_NAME} 
     ${GLAD_INCLUDE}
     ${GLFW_INCLUDE}
     ${GLM_INCLUDE}
-)
-
-# include_directories(${PROJECT_NAME}
-
-# Find OpenGL
-include(FindOpenGL)
-# Add the (.a/.lib) libraries
-
-target_link_libraries(${PROJECT_NAME} 
-    ${OPENGL_gl_LIBRARY}
-    ${GLFW_LIB}
 )

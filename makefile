@@ -1,22 +1,32 @@
 BUILD_FOLDER=$(CURDIR)/build
+BIN_FOLDER=$(CURDIR)/bin
 INSTALL_FOLDER=$(CURDIR)/install
-CMAKE_FOLDER=$(CURDIR)/util/cmake
+CMAKE_FOLDER=$(CURDIR)
 
 BUILD_TYPE=Visual Studio 15 2017 Win64
 
 ifeq ($(OS),Windows_NT)
 BUILD_RULE=build_windows
 CLEAN_RULE=clean_windows
+DEFAULT_RULE=nmake
 else
 BUILD_RULE=build_linux
 CLEAN_RULE=clean_linux
 endif
 
+### Builds ########################################################
+
 default: nmake
+
+run: nmake
+	@echo OFF & echo.
+	@echo Compilation successful!
+	@echo Running "$(BIN_FOLDER)/opengl_project.exe"...
+	@"$(BIN_FOLDER)/opengl_project.exe"
+	@echo Program terminated.
 
 nmake: BUILD_FOLDER=$(CURDIR)/build-nmake
 nmake: CMAKE_FLAGS+=-G"NMake Makefiles"
-nmake: CMAKE_FLAGS+=-B"$(BUILD_FOLDER)"
 nmake: CMAKE_FLAGS+=-B"$(BUILD_FOLDER)"
 nmake: call_cmake
 	cd "$(BUILD_FOLDER)" & nmake
@@ -34,7 +44,7 @@ call_cmake:
 	-mkdir "$(BUILD_FOLDER)"
 	cd "$(BUILD_FOLDER)" & cmake $(CMAKE_FLAGS) "$(CMAKE_FOLDER)"
 
-### Clean ######################################################################
+### Clean #########################################################
 
 clean: $(CLEAN_RULE)
 
