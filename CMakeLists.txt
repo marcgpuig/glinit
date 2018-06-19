@@ -54,8 +54,25 @@ ExternalProject_Add(glm
     GIT_REPOSITORY https://github.com/g-truc/glm.git
     GIT_SHALLOW 1
     GIT_TAG 0.9.9.0
+    PREFIX ${GLM_DIR}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    UPDATE_COMMAND ""
+)
+# ------------------------------------------------------------------
+
+# -- imgui----------------------------------------------------------
+set(IMGUI_DIR ${LIB_DIR}/imgui)
+set(IMGUI_INCLUDE ${IMGUI_DIR}/src/imgui)
+ExternalProject_Add(imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_SHALLOW 1
+    GIT_TAG v1.61
     CMAKE_ARGS -DGLM_INSTALL_ENABLE=OFF
-    PREFIX ${LIB_DIR}/glm
+    PREFIX ${IMGUI_DIR}
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
     INSTALL_COMMAND ""
     UPDATE_COMMAND ""
 )
@@ -63,7 +80,7 @@ ExternalProject_Add(glm
 
 # Mian executable
 add_executable(${PROJECT_NAME} ${SOURCES})
-add_dependencies(${PROJECT_NAME} glfw glm)
+add_dependencies(${PROJECT_NAME} glfw glm imgui)
 
 # Find OpenGL
 include(FindOpenGL)
@@ -78,4 +95,5 @@ include_directories(${PROJECT_NAME}
     ${GLAD_INCLUDE}
     ${GLFW_INCLUDE}
     ${GLM_INCLUDE}
+    ${IMGUI_INCLUDE}
 )

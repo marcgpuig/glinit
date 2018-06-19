@@ -1,0 +1,51 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns":
+			[
+				"bin",
+				"build*",
+				".vs",
+				".vscode",
+				".clang"
+			],
+			"file_exclude_patterns":
+			[
+				"*.exe",
+				"*.ilk",
+				"*.pdb",
+				"*.sln",
+				"*.sublime-workspace"
+			]
+		}
+	],
+	"settings":
+	{
+		"ensure_newline_at_eof_on_save": true,
+		"tab_size": 2,
+		"translate_tabs_to_spaces": true,
+		"trim_trailing_white_space_on_save": true
+	},
+	"build_systems":
+	[
+		{
+			"name": "nmake build",
+			"working_dir": "${project_path}",
+			"file_regex": "^([^\\(]+)\\(([0-9]+)\\):([0-9]+)? error (.*)$",
+			"shell_cmd": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" amd64 & make"
+		},
+		{
+			"name": "nmake build & run",
+			"working_dir": "${project_path}",
+			"file_regex": "^([^\\(]+)\\(([0-9]+)\\):([0-9]+)? error (.*)$",
+			"shell_cmd": "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat\" amd64 & make & bin\\opengl_project.exe"
+		},
+		{
+			"name": "nmake run",
+			"working_dir": "${project_path}",
+			"shell_cmd": "bin\\opengl_project.exe"
+		}
+	]
+}

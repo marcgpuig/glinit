@@ -9,6 +9,9 @@
 
 /*.dir/
 
+# Sublime text
+*.sublime-workspace
+
 # C++
 
 # Compiled Object files
