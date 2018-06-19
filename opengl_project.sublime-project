@@ -46,6 +46,11 @@
 			"name": "nmake run",
 			"working_dir": "${project_path}",
 			"shell_cmd": "bin\\opengl_project.exe"
+		},
+		{
+			"name": "nmake clean libs",
+			"working_dir": "${project_path}",
+			"shell_cmd": "make clean_libs"
 		}
 	]
 }

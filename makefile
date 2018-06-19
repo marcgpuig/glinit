@@ -1,6 +1,7 @@
 BUILD_FOLDER=$(CURDIR)/build
 BIN_FOLDER=$(CURDIR)/bin
 INSTALL_FOLDER=$(CURDIR)/install
+LIB_FOLDER=$(CURDIR)/lib
 CMAKE_FOLDER=$(CURDIR)
 
 BUILD_TYPE=Visual Studio 15 2017 Win64
@@ -8,10 +9,12 @@ BUILD_TYPE=Visual Studio 15 2017 Win64
 ifeq ($(OS),Windows_NT)
 BUILD_RULE=build_windows
 CLEAN_RULE=clean_windows
+CLEAN_LIBS_RULE=clean_libs_windows
 DEFAULT_RULE=nmake
 else
 BUILD_RULE=build_linux
 CLEAN_RULE=clean_linux
+CLEAN_LIBS_RULE=clean_libs_linux
 endif
 
 ### Builds ########################################################
@@ -53,3 +56,12 @@ clean_linux:
 
 clean_windows:
 	-@rd /s /q "$(INSTALL_FOLDER)"
+
+clean_lib: clean_libs
+clean_libs: $(CLEAN_LIBS_RULE)
+
+clean_libs_linux:
+	@rm -Rf $(LIB_FOLDER)/glfw $(LIB_FOLDER)/glm $(LIB_FOLDER)/imgui
+
+clean_libs_windows:
+	-@rd /s /q "$(LIB_FOLDER)/glfw" "$(LIB_FOLDER)/glm" "$(LIB_FOLDER)/imgui"

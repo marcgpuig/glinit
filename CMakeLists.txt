@@ -15,7 +15,7 @@ set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${BIN_DIR})
 
 # All source files in the dir
-file(GLOB_RECURSE SOURCES 
+file(GLOB_RECURSE SOURCES
 	${SRC_DIR}/*.cpp
 	${SRC_DIR}/*.h
     ${LIB_DIR}/glad/glad.c # glad.c must be added to source files
@@ -42,7 +42,7 @@ ExternalProject_Add(glfw
     	-DGLFW_VULKAN_STATIC=OFF
     	-DBUILD_SHARED_LIBS=OFF
     	-DCMAKE_INSTALL_PREFIX=${GLFW_DIR}
-    PREFIX glfw
+    PREFIX ${GLFW_DIR}
     UPDATE_COMMAND ""
 )
 # ------------------------------------------------------------------
@@ -86,12 +86,12 @@ add_dependencies(${PROJECT_NAME} glfw glm imgui)
 include(FindOpenGL)
 
 # Add the (.a/.lib) libraries
-target_link_libraries(${PROJECT_NAME} 
+target_link_libraries(${PROJECT_NAME}
     ${OPENGL_gl_LIBRARY}
     ${GLFW_LIB}
 )
 
-include_directories(${PROJECT_NAME} 
+include_directories(${PROJECT_NAME}
     ${GLAD_INCLUDE}
     ${GLFW_INCLUDE}
     ${GLM_INCLUDE}
