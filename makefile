@@ -32,7 +32,7 @@ nmake: BUILD_FOLDER=$(CURDIR)/build-nmake
 nmake: CMAKE_FLAGS+=-G"NMake Makefiles"
 nmake: CMAKE_FLAGS+=-B"$(BUILD_FOLDER)"
 nmake: call_cmake
-	cd "$(BUILD_FOLDER)" & nmake
+	@cd "$(BUILD_FOLDER)" & nmake
 
 vsproject15: BUILD_TYPE=Visual Studio 14 2015 Win64
 vsproject15: vsproject
@@ -44,8 +44,8 @@ vsproject: CMAKE_FLAGS+=-DCMAKE_INSTALL_PREFIX="$(INSTALL_FOLDER)"
 vsproject: call_cmake
 
 call_cmake:
-	-mkdir "$(BUILD_FOLDER)"
-	cd "$(BUILD_FOLDER)" & cmake $(CMAKE_FLAGS) "$(CMAKE_FOLDER)"
+	@if not exist "$(BUILD_FOLDER)" mkdir "$(BUILD_FOLDER)"
+	@cd "$(BUILD_FOLDER)" & cmake $(CMAKE_FLAGS) "$(CMAKE_FOLDER)"
 
 ### Clean #########################################################
 
@@ -55,7 +55,8 @@ clean_linux:
 	@rm -Rf $(INSTALL_FOLDER)
 
 clean_windows:
-	-@rd /s /q "$(INSTALL_FOLDER)"
+	@echo deleting "$(INSTALL_FOLDER)"...
+	@if exist "$(INSTALL_FOLDER)" (rmdir /s/q "$(INSTALL_FOLDER)")
 
 clean_lib: clean_libs
 clean_libs: $(CLEAN_LIBS_RULE)
@@ -64,4 +65,8 @@ clean_libs_linux:
 	@rm -Rf $(LIB_FOLDER)/glfw $(LIB_FOLDER)/glm $(LIB_FOLDER)/imgui
 
 clean_libs_windows:
-	-@rd /s /q "$(LIB_FOLDER)/glfw" "$(LIB_FOLDER)/glm" "$(LIB_FOLDER)/imgui"
+	@echo deleting libraries...
+	@for %%G in ("$(LIB_FOLDER)/glfw", "$(LIB_FOLDER)/glm", "$(LIB_FOLDER)/imgui") do ( if exist %%G (rmdir /s/q %%G) )
+
+clean_all: clean
+clean_all: clean_libs

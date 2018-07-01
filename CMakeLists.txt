@@ -6,6 +6,8 @@ project(opengl_project)
 #set(PRE ${CMAKE_STATIC_LIBRARY_PREFIX})
 #set(SUF ${CMAKE_STATIC_LIBRARY_SUFFIX})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /nologo")
+
 # Source directorioes and files
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
@@ -14,11 +16,16 @@ set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
 # Executable output directory
 set(EXECUTABLE_OUTPUT_PATH ${BIN_DIR})
 
-# All source files in the dir
+# All needed source files
 file(GLOB_RECURSE SOURCES
 	${SRC_DIR}/*.cpp
 	${SRC_DIR}/*.h
-    ${LIB_DIR}/glad/glad.c # glad.c must be added to source files
+)
+
+file(GLOB EXTERNAL_SOURCES
+    ${LIB_DIR}/glad/src/glad.c # glad.c must be added to source files
+    ${LIB_DIR}/imgui/src/imgui/*.cpp
+    ${LIB_DIR}/imgui/src/imgui/examples/imgui_impl_glfw.cpp
 )
 
 include(ExternalProject)
@@ -62,24 +69,29 @@ ExternalProject_Add(glm
 )
 # ------------------------------------------------------------------
 
-# -- imgui----------------------------------------------------------
+# -- Imgui----------------------------------------------------------
 set(IMGUI_DIR ${LIB_DIR}/imgui)
 set(IMGUI_INCLUDE ${IMGUI_DIR}/src/imgui)
+set(IMGUI_IMPL_INCLUDE ${IMGUI_INCLUDE}/examples) # imgui implementation for OpenGL3+
 ExternalProject_Add(imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
     GIT_SHALLOW 1
-    GIT_TAG v1.61
+    GIT_TAG v1.62
     CMAKE_ARGS -DGLM_INSTALL_ENABLE=OFF
     PREFIX ${IMGUI_DIR}
+    UPDATE_COMMAND ""
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
-    UPDATE_COMMAND ""
 )
 # ------------------------------------------------------------------
 
 # Mian executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME}
+    ${SOURCES}
+    ${EXTERNAL_SOURCES}
+)
+# glfw glm and imgui must be download and built before the project
 add_dependencies(${PROJECT_NAME} glfw glm imgui)
 
 # Find OpenGL
@@ -96,4 +108,5 @@ include_directories(${PROJECT_NAME}
     ${GLFW_INCLUDE}
     ${GLM_INCLUDE}
     ${IMGUI_INCLUDE}
+    ${IMGUI_IMPL_INCLUDE}
 )

@@ -48,9 +48,9 @@
 			"shell_cmd": "bin\\opengl_project.exe"
 		},
 		{
-			"name": "nmake clean libs",
+			"name": "nmake clean project",
 			"working_dir": "${project_path}",
-			"shell_cmd": "make clean_libs"
+			"shell_cmd": "make clean_all"
 		}
 	]
 }

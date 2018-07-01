@@ -1,7 +1,6 @@
 /build*/
 /bin/
 /data/
-/old_libs/
 
 # Ignore everything in lib except 'glad' folder
 /lib/*
