@@ -1,5 +1,5 @@
 # OpenGL Project
-Yet another OpenGL engine.
+Yet another OpenGL build project.
 
 # How to use
 ### Necessary software

@@ -22,10 +22,19 @@ file(GLOB_RECURSE SOURCES
 	${SRC_DIR}/*.h
 )
 
-file(GLOB EXTERNAL_SOURCES
-    ${LIB_DIR}/glad/src/glad.c # glad.c must be added to source files
-    ${LIB_DIR}/imgui/src/imgui/*.cpp
-    ${LIB_DIR}/imgui/src/imgui/examples/imgui_impl_glfw.cpp
+# External glad source file
+set(EXTERNAL_SOURCES 
+    ${LIB_DIR}/glad/src/glad.c
+)
+
+# More external source files.
+# In this case, this must be apart because the "ExternalProject_Add"
+# that will add imgui, must specify the files that will be generated
+# by it with the "BUILD_BYPRODUCTS" option.
+set(EXTERNAL_IMGUI_SOURCES
+    ${LIB_DIR}/imgui/imgui.cpp
+    ${LIB_DIR}/imgui/imgui_draw.cpp
+    ${LIB_DIR}/imgui/examples/imgui_impl_glfw.cpp
 )
 
 include(ExternalProject)
@@ -49,19 +58,19 @@ ExternalProject_Add(glfw
     	-DGLFW_VULKAN_STATIC=OFF
     	-DBUILD_SHARED_LIBS=OFF
     	-DCMAKE_INSTALL_PREFIX=${GLFW_DIR}
-    PREFIX ${GLFW_DIR}
+    SOURCE_DIR ${GLFW_DIR}
     UPDATE_COMMAND ""
 )
 # ------------------------------------------------------------------
 
 # -- GLM -----------------------------------------------------------
 set(GLM_DIR ${LIB_DIR}/glm)
-set(GLM_INCLUDE ${GLM_DIR}/src/glm)
+set(GLM_INCLUDE ${GLM_DIR})
 ExternalProject_Add(glm
     GIT_REPOSITORY https://github.com/g-truc/glm.git
     GIT_SHALLOW 1
     GIT_TAG 0.9.9.0
-    PREFIX ${GLM_DIR}
+    SOURCE_DIR ${GLM_DIR}
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
@@ -71,26 +80,29 @@ ExternalProject_Add(glm
 
 # -- Imgui----------------------------------------------------------
 set(IMGUI_DIR ${LIB_DIR}/imgui)
-set(IMGUI_INCLUDE ${IMGUI_DIR}/src/imgui)
+set(IMGUI_INCLUDE ${IMGUI_DIR})
 set(IMGUI_IMPL_INCLUDE ${IMGUI_INCLUDE}/examples) # imgui implementation for OpenGL3+
 ExternalProject_Add(imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
     GIT_SHALLOW 1
     GIT_TAG v1.62
     CMAKE_ARGS -DGLM_INSTALL_ENABLE=OFF
-    PREFIX ${IMGUI_DIR}
+    SOURCE_DIR ${IMGUI_DIR}
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
+    BUILD_BYPRODUCTS ${EXTERNAL_IMGUI_SOURCES}
 )
 # ------------------------------------------------------------------
 
 # Mian executable
 add_executable(${PROJECT_NAME}
-    ${SOURCES}
     ${EXTERNAL_SOURCES}
+    ${EXTERNAL_IMGUI_SOURCES}
+    ${SOURCES}
 )
+
 # glfw glm and imgui must be download and built before the project
 add_dependencies(${PROJECT_NAME} glfw glm imgui)
 
