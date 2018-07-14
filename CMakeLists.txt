@@ -1,7 +1,7 @@
 # https://jacquesh.github.io/post/basic-cmake/
 # Project definition
 cmake_minimum_required(VERSION 3.8.0)
-project(opengl_project)
+project(glinit)
 
 #set(PRE ${CMAKE_STATIC_LIBRARY_PREFIX})
 #set(SUF ${CMAKE_STATIC_LIBRARY_SUFFIX})
@@ -23,7 +23,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 # External glad source file
-set(EXTERNAL_SOURCES 
+set(EXTERNAL_SOURCES
     ${LIB_DIR}/glad/src/glad.c
 )
 
