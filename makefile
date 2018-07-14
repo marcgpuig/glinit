@@ -35,9 +35,13 @@ nmake: call_cmake
 	@cd "$(BUILD_FOLDER)" & nmake
 
 vsproject15: BUILD_TYPE=Visual Studio 14 2015 Win64
+vsproject15: BUILD_FOLDER=$(CURDIR)/build-vs-15
 vsproject15: vsproject
 
-vsproject: BUILD_FOLDER=$(CURDIR)/build-vs-15
+vsproject17: BUILD_TYPE=Visual Studio 15 2017 Win64
+vsproject17: BUILD_FOLDER=$(CURDIR)/build-vs-17
+vsproject17: vsproject
+
 vsproject: CMAKE_FLAGS+=-G"$(BUILD_TYPE)"
 vsproject: CMAKE_FLAGS+=-B"$(BUILD_FOLDER)"
 vsproject: CMAKE_FLAGS+=-DCMAKE_INSTALL_PREFIX="$(INSTALL_FOLDER)"
