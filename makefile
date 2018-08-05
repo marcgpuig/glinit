@@ -19,7 +19,13 @@ endif
 
 ### Builds ########################################################
 
-default: nmake
+default: help
+
+help:
+	@echo Options:
+	@echo  - nmake
+	@echo  - vs15
+	@echo  - vs17
 
 run: nmake
 	@echo OFF & echo.
@@ -34,13 +40,13 @@ nmake: CMAKE_FLAGS+=-B"$(BUILD_FOLDER)"
 nmake: call_cmake
 	@cd "$(BUILD_FOLDER)" & nmake
 
-vsproject15: BUILD_TYPE=Visual Studio 14 2015 Win64
-vsproject15: BUILD_FOLDER=$(CURDIR)/build-vs-15
-vsproject15: vsproject
+vs15: BUILD_TYPE=Visual Studio 14 2015 Win64
+vs15: BUILD_FOLDER=$(CURDIR)/build-vs-15
+vs15: vsproject
 
-vsproject17: BUILD_TYPE=Visual Studio 15 2017 Win64
-vsproject17: BUILD_FOLDER=$(CURDIR)/build-vs-17
-vsproject17: vsproject
+vs17: BUILD_TYPE=Visual Studio 15 2017 Win64
+vs17: BUILD_FOLDER=$(CURDIR)/build-vs-17
+vs17: vsproject
 
 vsproject: CMAKE_FLAGS+=-G"$(BUILD_TYPE)"
 vsproject: CMAKE_FLAGS+=-B"$(BUILD_FOLDER)"
